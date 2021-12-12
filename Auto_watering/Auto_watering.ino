@@ -35,20 +35,22 @@ void setup() {
   int data = analogRead(sensor);
   Serial.println(data);
 
+  /*
   // 数値は不確定
   if (data >= 700) {
     digitalWrite(pump, HIGH);
     delay(3000);
     digitalWrite(pump, LOW);
   }
+   */
+ 
 
   // データセット
   ambient.set(1, data);
   ambient.send();
 
-  ESP.deepSleep(180 * 1000000, RF_DEFAULT);
+  ESP.deepSleep(1800 * 1000000, RF_DEFAULT);
   delay(1000);
 }
 
-void loop() {
-}
+void loop() {}
