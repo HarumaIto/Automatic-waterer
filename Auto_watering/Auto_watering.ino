@@ -1,10 +1,10 @@
 #include <ESP8266WiFi.h>
 #include <Ambient.h>
 
-const char* ssid = "IPアドレス";
-const char* password = "パスワード";
-const int channelId = チャンネルID;
-const char* writeKey = "書き込みキー";
+const char* ssid = "ctc-g-2be8fe";
+const char* password = "2eae0a2471cf2";
+const int channelId = 44960;
+const char* writeKey = "160cea692249a60c";
 const boolean displayMode = true;
 
 WiFiClient client;
@@ -12,13 +12,6 @@ Ambient ambient;
 
 const int sensor = A0;
 const int pump = 7;
-
-// RTC memory(512Byte)の定義
-// 電源が途切れるとリセットされる
-struct {
-  uint32_t dryCount;
-  uint8_t data[508];
-} rtcData;
 
 void setup() {
   Serial.begin(115200);
@@ -37,32 +30,22 @@ void setup() {
   ambient.begin(channelId, writeKey, &client);
 
   pinMode(sensor, INPUT);
+  pinMode(pump, OUTPUT);
+  digitalWrite(pump, HIGH);
 
   // データ取得
   int data = analogRead(sensor);
   Serial.println(data);
 
-  // RTCメモリからデータ読み取り
-  if (ESP.rtcUserMemoryRead(0, (uint32_t*) &rtcData, sizeof(rtcData))) {
-    if (data > 680) {
-      rtcData.dryCount++;
-    }
-
-    if (rtcData.dryCount > 143) {
-      rtcData.dryCount = 0;
-      //digitalWrite(pump, HIGH);
-      //delay(3000);
-      //digitalWrite(pump, LOW);
-    }
+  if (data > 710) {
+    digitalWrite(pump, LOW);
+    delay(8000);
+    digitalWrite(pump, HIGH);
   }
 
   // データセット
   ambient.set(1, data);
-  ambient.set(2, (int) rtcData.dryCount);
   ambient.send();
-
-  // RTCメモリへ書き込み
-  ESP.rtcUserMemoryWrite(0, (uint32_t*) &rtcData, sizeof(rtcData));
 
   ESP.deepSleep(1800 * 1000000, RF_DEFAULT);
   delay(1000);
