@@ -1,10 +1,10 @@
 #include <ESP8266WiFi.h>
 #include <Ambient.h>
 
-const char* ssid = "ctc-g-2be8fe";
-const char* password = "2eae0a2471cf2";
-const int channelId = 44960;
-const char* writeKey = "160cea692249a60c";
+const char* ssid = "ssid";
+const char* password = "password";
+const int channelId = channelId;
+const char* writeKey = "writekey";
 const boolean displayMode = true;
 
 WiFiClient client;
